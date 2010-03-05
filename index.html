@@ -1,0 +1,138 @@
+<script type="text/javascript" src="jquery-1.4.1.min.js"></script> 
+<script type="text/javascript" src="base.js"></script> 
+<script type="text/javascript" src="rotate3di.js"></script> 
+ 
+
+<link rel="stylesheet" href="base.css" type="text/css" media="screen" />
+
+
+<style type="text/css" media="screen"> 
+ 
+ 
+p a {
+    display: block;
+    padding: 36px 24px;
+}
+ 
+#nav-list-example {
+    height: 132px;
+    width: 100%; /* 624px; */
+    margin: 48px 0;
+}
+ 
+#nav-list-example li {
+    width: 132px;
+    height: 132px;
+    float: left;
+    margin-right: 24px;
+    position: relative;
+}
+ 
+#nav-list-example li div {
+    width: 132px;
+    height: 132px;
+    overflow: hidden;
+    background: black;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+ 
+#nav-list-example li div.back {
+    left: -999em;
+    background: #999;
+}
+</style> 
+ 
+<script type="text/javascript" language="javascript"> 
+var lDiv;
+$(document).ready(function () {
+    GetImage();
+    var t=setTimeout("SetupRotatingDivs()",6000)
+});
+
+function SetupRotatingDivs()
+{
+    $('#nav-list-example li div.back').hide().css('left', 0);
+    
+    function mySideChange(front) {
+        if (front) {
+            $(this).parent().find('div.front').show();
+            $(this).parent().find('div.back').hide();
+            
+        } else {
+            $(this).parent().find('div.front').hide();
+            $(this).parent().find('div.back').show();
+        }
+    }
+    
+    $('#nav-list-example li').hover(
+        function () {
+            $(this).find('div').stop().rotate3Di('flip', 250, {direction: 'clockwise', sideChange: mySideChange});
+        },
+        function () {
+            $(this).find('div').stop().rotate3Di('unflip', 500, {sideChange: mySideChange});
+        }
+    );
+
+}
+
+function GetImage()
+{
+	var keys = ['beer','brazilian bikini','whiskey','coffee','virtual worlds'];
+	var NImages = keys.length;
+	for(var bindex=0; bindex < keys.length;bindex++ )
+	{
+		index = bindex % keys.length;
+		var key = keys[index];
+		var apiurl = "http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q="+encodeURIComponent(key)+"&callback=?";
+		CreateImagesWithUrl(apiurl,bindex,key);
+/*
+		(function(){
+			var cind = bindex;
+			var ckey = key;
+			var nkeys = keys.length;
+			$.getJSON(apiurl,{ "":cind,"":ckey },function(ob) {
+				var dim = ob.responseData.results.length;
+				for(var limageindex=0; limageindex < dim;limageindex++ ) {
+					imageurl = ob.responseData.results[limageindex].url;
+					timageurl = ob.responseData.results[limageindex].tbUrl;
+					//alert("# results "+ob.responseData.results.length+" limageindex "+limageindex);
+					var ImageID = 'f'+(cind*dim+limageindex);
+//					var lDiv = $(ImageID)[0];
+					var lDiv = $('#nav-list-example')[0];
+					lDiv.innerHTML += '<li><div class="front" id="f'+ImageID+'"><a href="'+imageurl+'">' +
+						'<img src="'+timageurl+'" width="132" height="132" alt="'+ckey+'"/></a></div>' +
+					        '<div class="back" id="b'+ImageID+'"><a href="'+imageurl+'">'+ckey+'</a></div></li>';
+				}
+			});
+		})();
+*/
+	}
+}
+function CreateImagesWithUrl(apiurl,bindex,key)
+{
+	var cind = bindex;
+	var ckey = key;
+	$.getJSON(apiurl,{ "":cind,"":ckey },function(ob) {
+		var dim = ob.responseData.results.length;
+		for(var limageindex=0; limageindex < dim;limageindex++ ) {
+			imageurl = ob.responseData.results[limageindex].url;
+			timageurl = ob.responseData.results[limageindex].tbUrl;
+			var ImageID = 'f'+(cind*dim+limageindex);
+//			var lDiv = $(ImageID)[0];
+			var lDiv = $('#nav-list-example')[0];
+			lDiv.innerHTML += '<li><div class="front" id="f'+ImageID+'"><a href="'+imageurl+'">' +
+				'<img src="'+timageurl+'" width="132" height="132" alt="'+ckey+'"/></a></div>' +
+			        '<div class="back" id="b'+ImageID+'"><a href="'+imageurl+'">'+ckey+'</a></div></li>';
+		}
+	});
+}
+</script>
+
+
+
+<ul id="nav-list-example">
+</ul> 
+
+
