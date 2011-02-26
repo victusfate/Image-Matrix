@@ -1,138 +1,267 @@
-<script type="text/javascript" src="jquery-1.4.1.min.js"></script> 
-<script type="text/javascript" src="base.js"></script> 
-<script type="text/javascript" src="rotate3di.js"></script> 
- 
-
-<link rel="stylesheet" href="base.css" type="text/css" media="screen" />
-
-
-<style type="text/css" media="screen"> 
- 
- 
-p a {
-    display: block;
-    padding: 36px 24px;
-}
- 
-#nav-list-example {
-    height: 132px;
-    width: 100%; /* 624px; */
-    margin: 48px 0;
-}
- 
-#nav-list-example li {
-    width: 132px;
-    height: 132px;
-    float: left;
-    margin-right: 24px;
-    position: relative;
-}
- 
-#nav-list-example li div {
-    width: 132px;
-    height: 132px;
-    overflow: hidden;
-    background: black;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
- 
-#nav-list-example li div.back {
-    left: -999em;
-    background: #999;
-}
-</style> 
- 
-<script type="text/javascript" language="javascript"> 
-var lDiv;
-$(document).ready(function () {
-    GetImage();
-    var t=setTimeout("SetupRotatingDivs()",6000)
-});
-
-function SetupRotatingDivs()
-{
-    $('#nav-list-example li div.back').hide().css('left', 0);
-    
-    function mySideChange(front) {
-        if (front) {
-            $(this).parent().find('div.front').show();
-            $(this).parent().find('div.back').hide();
-            
-        } else {
-            $(this).parent().find('div.front').hide();
-            $(this).parent().find('div.back').show();
-        }
-    }
-    
-    $('#nav-list-example li').hover(
-        function () {
-            $(this).find('div').stop().rotate3Di('flip', 250, {direction: 'clockwise', sideChange: mySideChange});
-        },
-        function () {
-            $(this).find('div').stop().rotate3Di('unflip', 500, {sideChange: mySideChange});
-        }
-    );
-
-}
-
-function GetImage()
-{
-	var keys = ['beer','brazilian bikini','whiskey','coffee','virtual worlds'];
-	var NImages = keys.length;
-	for(var bindex=0; bindex < keys.length;bindex++ )
-	{
-		index = bindex % keys.length;
-		var key = keys[index];
-		var apiurl = "http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q="+encodeURIComponent(key)+"&callback=?";
-		CreateImagesWithUrl(apiurl,bindex,key);
-/*
-		(function(){
-			var cind = bindex;
-			var ckey = key;
-			var nkeys = keys.length;
-			$.getJSON(apiurl,{ "":cind,"":ckey },function(ob) {
-				var dim = ob.responseData.results.length;
-				for(var limageindex=0; limageindex < dim;limageindex++ ) {
-					imageurl = ob.responseData.results[limageindex].url;
-					timageurl = ob.responseData.results[limageindex].tbUrl;
-					//alert("# results "+ob.responseData.results.length+" limageindex "+limageindex);
-					var ImageID = 'f'+(cind*dim+limageindex);
-//					var lDiv = $(ImageID)[0];
-					var lDiv = $('#nav-list-example')[0];
-					lDiv.innerHTML += '<li><div class="front" id="f'+ImageID+'"><a href="'+imageurl+'">' +
-						'<img src="'+timageurl+'" width="132" height="132" alt="'+ckey+'"/></a></div>' +
-					        '<div class="back" id="b'+ImageID+'"><a href="'+imageurl+'">'+ckey+'</a></div></li>';
-				}
-			});
-		})();
-*/
-	}
-}
-function CreateImagesWithUrl(apiurl,bindex,key)
-{
-	var cind = bindex;
-	var ckey = key;
-	$.getJSON(apiurl,{ "":cind,"":ckey },function(ob) {
-		var dim = ob.responseData.results.length;
-		for(var limageindex=0; limageindex < dim;limageindex++ ) {
-			imageurl = ob.responseData.results[limageindex].url;
-			timageurl = ob.responseData.results[limageindex].tbUrl;
-			var ImageID = 'f'+(cind*dim+limageindex);
-//			var lDiv = $(ImageID)[0];
-			var lDiv = $('#nav-list-example')[0];
-			lDiv.innerHTML += '<li><div class="front" id="f'+ImageID+'"><a href="'+imageurl+'">' +
-				'<img src="'+timageurl+'" width="132" height="132" alt="'+ckey+'"/></a></div>' +
-			        '<div class="back" id="b'+ImageID+'"><a href="'+imageurl+'">'+ckey+'</a></div></li>';
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='utf-8'>
+		<title>
+			victusfate/Image-Matrix @ GitHub
+		</title>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/jquery-ui.min.js"></script>
+		
+		<style type="text/css">
+		body {
+			margin-top: 1.0em;
+			background-color: #7ea4aa;
+			font-family: "Helvetica,Arial,FreeSans";
+			color: #000000;
 		}
-	});
-}
-</script>
+		#container {
+			margin: 0 auto;
+			width: 700px;
+		}
+		h1 {
+			font-size: 3.8em;
+			color: #815b55;
+			margin-bottom: 3px;
+		}
+		h1 .small {
+			font-size: 0.4em;
+		}
+		h1 a {
+			text-decoration: none
+		}
+		h2 {
+			font-size: 1.5em;
+			color: #815b55;
+		}
+		h3 {
+			text-align: center;
+			color: #815b55;
+		}
+		a {
+			color: #815b55;
+		}
+		.description {
+			font-size: 1.2em;
+			margin-bottom: 30px;
+			margin-top: 30px;
+			font-style: italic;
+		}
+		.download {
+			float: right;
+		}
+		pre {
+			background: #000;
+			color: #fff;
+			padding: 15px;
+		}
+		hr {
+			border: 0;
+			width: 80%;
+			border-bottom: 1px solid #aaa
+		}
+		.footer {
+			text-align: center;
+			padding-top: 30px;
+			font-style: italic;
+		}
+
+		#nav-list-example {
+			list-style-type: none;
+			height: 160px; 
+			width: 100%; /* 624px; */
+			margin: 48px 0;
+		}
+
+		#nav-list-example li {
+			width: 160px;
+			height: 160px; 
+			float: left;
+			margin-right: 24px;
+			position: relative;
+		}
+
+		#nav-list-example li div {
+			width: 160px;
+			height: 160px;
+/*			overflow: hidden; */
+/*			background: black; */
+			position: relative;
+			top: 0;
+			left: 0;
+		}
+
+		#nav-list-example li div.back {
+			background: #999;
+			left:-999em;
+		}
+		
+		ul.nav-list-example {
+			margin-bottom: 12px;
+		}
+		
+		#ibox {
+			width: 745px;
+			height: 640px;
+		}
+		img {
+			position: absolute;
+		}
+		
+
+		</style>
+		
+		
+	<script type="text/javascript">
+		var lDiv;
+		$(document).ready(function() {
+			var default_keys = ['energy', 'coffee', 'virtual worlds'];
+//			$("#keys").prepend("cols "+$("#key_name").css('size')+"<br/>");
+			$("input").focus(function(srcc)
+			 {
+			    if ($(this).val() == default_keys)
+			    {
+			        $(this).val("");
+			    }
+			});
+		    SetupRotatingDivs();
+		    GetImage(default_keys);
+		});
+
+		function UpdateTextArea() {
+/*			// had trouble getting size css element back from .key_name
+			var clength = $("#key_name").css('size');
+			var vlength = $("#key_name").val().length;
+			$("#keys").prepend("UpdateTextArea() clength "+clength+" vlength "+vlength+"<br/>");
+			if ( (clength - vlength) <= 3) {
+				$("#key_name").css('size', vlength + 10);
+			}
+			*/
+		}
 
 
+		function SetupRotatingDivs() {
+		    $('#nav-list-example li div.back').hide().css('left', 0);
+			$('div.front').live({
+				mouseover: function() {
+					$(this).css('z-index', '5');
+					$(this).find('img').stop().animate({
+						width: 264,
+						height: 264,
+					    left: -61,
+					    top: -61,
+					},200);
+				},
+				mouseleave: function() {
+					$(this).find('img').stop().animate({
+					    width: 132,
+						height: 132,
+						left: 0,
+						top: 0				
+					},200);
+					$(this).css('z-index', '1');
+				}				
+			});
+		}
 
-<ul id="nav-list-example">
-</ul> 
+		function GetImage(keys) {
+			$("#nav-list-example").html('');
+		    var NImages = keys.length;
+			$("#ibox").css("height",keys.length*160);
+		    for (var bindex = 0; bindex < keys.length; bindex++) {
+		        index = bindex % keys.length;
+		        var key = keys[index];
+		        var apiurl = "http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=" + encodeURIComponent(key) + "&callback=?";
+		        CreateImagesWithUrl(apiurl, bindex, key);
+		    }
+		}
 
 
+   	 function CreateImagesWithUrl(apiurl, bindex, key) {
+	        var cind = bindex;
+	        var ckey = key;
+	        $.getJSON(apiurl, {
+	            "": cind,
+	            "": ckey
+	        },
+	        function(ob) {
+	            var dim = ob.responseData.results.length;
+	            for (var limageindex = 0; limageindex < dim; limageindex++) {
+	                imageurl = ob.responseData.results[limageindex].url;
+	                timageurl = ob.responseData.results[limageindex].tbUrl;
+					imagetitle = ob.responseData.results[limageindex].titleNoFormatting;
+	                var ImageID = 'f' + (cind * dim + limageindex);
+	                //          var lDiv = $(ImageID)[0];
+	                var lDiv = $('#nav-list-example');
+	                lDiv.append('<li><div class="front" id="f' + ImageID + '"><a href="' + imageurl + '" title="'+imagetitle+'">' +
+	                '<img src="' + timageurl + '" width="132" height="132" alt="' + ckey + '"/><\/a><\/div><\/li>');
+	            }
+	        });
+	    }
+    </script>
+	</head>
+
+	<body>
+		<p>
+			<a href="http://github.com/victusfate/Image-Matrix"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+		</p>
+		<div id="container">
+			<div class="download">
+				<a href="http://github.com/victusfate/Image-Matrix/zipball/master"><img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a> <a href="http://github.com/victusfate/Image-Matrix/tarball/master"><img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
+			</div>
+			<h1>
+				<a href="http://github.com/victusfate/Image-Matrix">Image-Matrix</a> <span class="small">by <a href="http://github.com/victusfate">victusfate</a></span>
+			</h1>
+			<div class="description">
+				javascript matrix of images created from topics, google search API
+			</div>
+
+			<div id="keys">				
+					<form action="javascript:GetImage($('#key_name').val().split(','));">
+				    <div>
+						search key(s) <input id="key_name" type="textarea" size="100" value="energy, coffee, virtual worlds" onkeyup="UpdateTextArea()"/>
+				    </div>
+				  </form>
+				
+			</div>			
+
+			<div id="ibox">
+				<ul id="nav-list-example">
+				</ul>
+			</div>
+
+			<br>
+			<br>
+			<br>
+			<h2>
+				Authors
+			</h2>
+			<p>
+				Mark Essel (messel@gmail.com)<br>
+				<br>
+			</p>
+			<h2>
+				Contact
+			</h2>
+			<p>
+				Mark Essel (messel@gmail.com)<br>
+			</p>
+			<h2>
+				Download
+			</h2>
+
+			<p>
+				You can download this project in either <a href="http://github.com/victusfate/Image-Matrix/zipball/master">zip</a> or <a href="http://github.com/victusfate/Image-Matrix/tarball/master">tar</a> formats.
+			</p>
+			<p>
+				You can also clone the project with <a href="http://git-scm.com">Git</a> by running:
+			</p>
+			<pre>
+$ git clone git://github.com/victusfate/Image-Matrix
+</pre>
+			<div class="footer">
+				get the source code on GitHub : <a href="http://github.com/victusfate/Image-Matrix">victusfate/Image-Matrix</a>
+			</div>
+		</div>
+	</body>
+</html>
