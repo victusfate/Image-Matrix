@@ -124,7 +124,7 @@
 			        $(this).val("");
 			    }
 			});
-		    SetupRotatingDivs();
+		    SetupGrowingDivs();
 		    GetImage(default_keys);
 		});
 
@@ -140,7 +140,7 @@
 		}
 
 
-		function SetupRotatingDivs() {
+		function SetupGrowingDivs() {
 		    $('#nav-list-example li div.back').hide().css('left', 0);
 			$('div.front').live({
 				mouseover: function() {
